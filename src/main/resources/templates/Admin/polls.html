@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Polls</title>
+
+    <link href="/css1/bootstrap.min1.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- FooTable -->
+    <link href="/css1/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="/css1/animate1.css" rel="stylesheet">
+    <link href="/css1/style1.css" rel="stylesheet">
+
+    <style>
+        .profile-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+
+    <style>
+        #project-filters{
+            display: flex;
+            gap: 20px;
+        }
+        #project-filters select{
+            width: 50%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation" th:replace="SuperAdmin/index.html :: navbar">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <!-- <img alt="image" class="rounded-circle" src="img1/abisoft_1.png" width="96" height="96" /> -->
+                            <div class="profile-icon" th:text="${user != null ? user.firstName.substring(0,1) : 'A'}">
+                            </div>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" th:object="${user}">
+                                <span class="block m-t-xs font-bold" th:text="${user.firstName + ' ' + user.lastName}">David Williams</span>
+                                <span class="text-muted text-xs block">SuperAdmin <b class="caret"></b></span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                                <li><a class="dropdown-item" th:href="@{/contacts}">Contacts</a></li>
+                                <li><a class="dropdown-item" th:href="@{/mailbox}">Mailbox</a></li>
+                                <li class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" th:href="@{/index}">Logout</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            SG
+                        </div>
+                    </li>
+
+                    <li th:class="${#request.requestURI == '/SuperAdmin/index' ? 'active' : ''}">
+                        <a href="/SuperAdmin/index">
+                            <i class="fa fa-home"></i> <!-- Equivalent for dashboard -->
+                            <span class="nav-label">Accueil</span>
+                        </a>
+                    </li>
+                    <li th:class="${#request.requestURI == '/SuperAdmin/projects' || projet != null ? 'active' : ''}">
+                        <a href="/SuperAdmin/Projects">
+                            <i class="fa fa-folder"></i> <!-- General folder icon for projects -->
+                            <span class="nav-label">Projets</span>
+                        </a>
+                    </li>
+                    <li th:class="${#request.requestURI == '/SuperAdmin/clients' ? 'active' : ''}">
+                        <a href="/SuperAdmin/clients">
+                            <i class="fa fa-user"></i> <!-- Single user icon as a representation for users -->
+                            <span class="nav-label">Clients</span>
+                        </a>
+                    </li>
+                    <li th:class="${#request.requestURI == '/SuperAdmin/employees/notVerified' || #request.requestURI == '/SuperAdmin/employees' ? 'active' : ''}">
+                        <a href="#"><i class="fa fa-briefcase"></i> <span class="nav-label">Employés</span><span
+                                class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li th:class="${#request.requestURI == '/SuperAdmin/employees/notVerified' ? 'active' : ''}"><a
+                                    th:href="@{/SuperAdmin/employees/notVerified}">Employées non verifiés</a></li>
+                            <li th:class="${#request.requestURI == '/SuperAdmin/employees' ? 'active' : ''}"><a
+                                    th:href="@{/SuperAdmin/employees}">Tous les employés</a></li>
+                        </ul>
+                    </li>
+                    <li th:class="${#request.requestURI == '/SuperAdmin/prestations' ? 'active' : ''}">
+                        <a href="/SuperAdmin/prestations">
+                            <i class="fa fa-cogs"></i> <!-- Single user icon as a representation for users -->
+                            <span class="nav-label">Prestations</span>
+                        </a>
+                    </li>
+                    <li th:class="${#request.requestURI == '/SuperAdmin/admins' ? 'active' : ''}">
+                        <a href="/SuperAdmin/admins">
+                            <i class="fa fa-user"></i> <!-- Single user icon as a representation for users -->
+                            <span class="nav-label">Administrateurs</span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+                        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0" th:replace="Client/index.html :: header">
+
+        <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+        </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                        <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                        <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="login.html">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+        </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Projects List</h2>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <strong>Polls</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox ">
+                        <div class="ibox-content">
+                            <div class="row" style="margin-bottom: 20px">
+                                <div class="col-sm-2 m-b-xs">
+                                    <select id="country-filter" class="form-control-sm form-control input-s-sm inline">
+                                        <option value="">Tous les pays</option>
+                                        <option th:each="country : ${Countries}" th:value="${country.id}" th:text="${country.name}"></option>
+                                    </select>
+                                </div>
+                                <div id="project-filters" class="col-sm-5 m-b-xs">
+                                    <select id="category-filter" class="form-control-sm form-control input-s-sm inline">
+                                        <option value="">Tous les categories</option>
+                                        <option th:each="category : ${Categories}" th:value="${category.name()}" th:text="${category.description}"></option>
+                                    </select>
+
+                                    <select id="prestation-filter" class="form-control-sm form-control input-s-sm inline">
+                                        <option value="">Tous les prestations</option>
+                                        <option th:each="prestation : ${Prestations}" th:value="${prestation.id}" th:text="${prestation.name}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input id="search-filter" placeholder="Search" type="text" class="form-control form-control-sm">
+                                        <span class="input-group-append"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="footable table table-stripped toggle-arrow-tiny">
+                                <thead>
+                                    <tr>
+                                        <th data-toggle="true">Nom de Projet</th>
+                                        <th>Prestation</th>
+                                        <th>Categorie</th>
+                                        <th>Progression</th>
+                                        <th data-hide="all">Date de départ</th>
+                                        <th data-hide="all">Soumis par</th>
+                                        <th data-hide="all">Contact</th>
+                                        <th data-hide="all">Chef</th>
+                                        <th>État de paiment</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="Project : ${Projects}"
+                                    th:data-category-id="${Project.categorie}"
+                                    th:data-prestation-id="${Project.prestation.id}">
+                                    <td th:text="${Project.name}"></td>
+                                    <td th:text="${Project.prestation.name}"></td>
+                                    <td th:text="${Project.categorie.description}"></td>
+                                    <td th:text="${Project.progression}"></td>
+                                    <td th:text="${Project.creationDate}"></td>
+                                    <td th:text="${Project.owner.firstName + ' ' + Project.owner.lastName}"></td>
+                                    <td th:text="${Project.owner.email}"></td>
+                                    <td th:text="${Project.chef != null ? Project.chef.firstName + ' ' + Project.chef.lastName : 'Pas Assigné'}"></td>
+                                                                        <td th:text="${Project.paymentStatus.displayName}"></td>
+
+                                    <td>
+                                        <a th:href="@{/SuperAdmin/Project/{id}(id=${Project.id})}">
+                                            <i class="fa fa-eye text-navy"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5">
+                                            <ul class="pagination float-right"></ul>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        </div>
+
+
+    <!-- Mainly scripts -->
+    <script src="/js1/jquery-3.1.1.min.js"></script>
+    <script src="/js1/popper.min.js"></script>
+    <script src="/js1/bootstrap1.js"></script>
+    <script src="/js1/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/js1/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- FooTable -->
+    <script src="/js1/plugins/footable/footable.all.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/js1/inspinia.js"></script>
+    <script src="/js1/plugins/pace/pace.min.js"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('country-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('category-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('prestation-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('search-filter').addEventListener('input', fetchFilteredData);
+
+            function fetchFilteredData() {
+                const selectedCountry = document.getElementById('country-filter').value;
+                const selectedCategory = document.getElementById('category-filter').value;
+                const selectedPrestation = document.getElementById('prestation-filter').value;
+                const searchQuery = document.getElementById('search-filter').value.trim();
+
+                // document.getElementById('loading-indicator').style.display = 'block';
+
+                fetch(`/SuperAdmin/filteredProjects?countryId=${selectedCountry}&category=${selectedCategory}&prestation=${selectedPrestation}&search=${searchQuery}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Filtered projects:', data);
+                        updateTable(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+
+            }
+
+            function updateTable(projects) {
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = '';
+
+                projects.forEach(project => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-category-id', project.categorie);
+                    row.setAttribute('data-prestation-id', project.idPrestation);
+
+                    row.innerHTML = `
+                            <td>${project.name}</td>
+                            <td>${project.nomPrestation}</td>
+                            <td>${project.categorie}</td>
+                            <td>${project.progression}</td>
+                            <td>${project.creationDate}</td>
+                            <td>${project.owner}</td>
+                            <td>${project.contact}</td>
+                            <td>${project.chef ? project.chef : 'Pas Assigné'}</td>
+                            <td>${project.paymentStatus}</td>
+                            <td>
+                                <a href="/SuperAdmin/Project/${project.id}">
+                                    <i class="fa fa-eye text-navy"></i> View
+                                </a>
+                            </td>
+                        `;
+
+                    tbody.appendChild(row);
+                });
+
+                const footable = $('.footable');
+                footable.footable();
+                footable.trigger('footable_redraw');
+            }
+        });
+
+        $(document).ready(function() {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+        });
+
+    </script>
+
+</body>
+
+</html>

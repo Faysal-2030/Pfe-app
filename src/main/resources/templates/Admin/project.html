@@ -1,0 +1,544 @@
+<!--
+*
+*  INSPINIA - Responsive Admin Theme
+*  version 2.8
+*
+-->
+
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>SIGMA | Dashboard</title>
+
+    <link href="/css1/bootstrap.min1.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="/css1/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <!-- Gritter -->
+    <link href="/js1/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+    <link href="/css1/animate1.css" rel="stylesheet">
+    <link href="/css1/style1.css" rel="stylesheet">
+
+    <style>
+        #chef-select-remove {
+            display: flex;
+            gap: 20px;
+        }
+
+        #docs-table tbody tr td {
+            min-width: 50%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation" th:replace="SuperAdmin/index.html :: navbar">
+            <style>
+                .profile-icon {
+                    width: 96px;
+                    height: 96px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 36px;
+                    color: white;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+            </style>
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <!-- <img alt="image" class="rounded-circle" src="img1/abisoft_1.png" width="96" height="96"/> -->
+                            <div class="profile-icon" th:text="${user != null ? user.firstName.substring(0,1) : 'A'}">
+                            </div>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" th:object="${user}">
+                                <span class="block m-t-xs font-bold"
+                                    th:text="${user.firstName + ' ' + user.lastName}">David Williams</span>
+                                <span class="text-muted text-xs block"><span>Client</span> <b class="caret"></b></span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                                <li><a class="dropdown-item" th:href="@{/contacts}">Contacts</a></li>
+                                <li><a class="dropdown-item" th:href="@{/mailbox}">Mailbox</a></li>
+                                <li class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" th:href="@{/index}">Logout</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            SI
+                        </div>
+                    </li>
+                    <li
+                        th:class="${#request.requestURI == '/Client/index' || #request.requestURI == '/dashboard' ? 'active' : ''}">
+                        <a th:href="@{/Client/index}"><i class="fa fa-plus"></i> <span class="nav-label">Acceuil</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">Mes projets</span><span
+                                class="fa arrow"></span></a>
+                        <!--                        <ul class="nav nav-second-level collapse">-->
+                        <!--                            &lt;!&ndash; <li>teeeest</li> &ndash;&gt;-->
+                        <!--                            <li th:each="projet : ${user.projets}"-->
+                        <!--                                th:classappend="${#request.requestURI == '/Client/projet/' + projet.id ? 'active' : ''}">-->
+                        <!--                                <a th:href="@{/Client/projet/{id}(id=${projet.id})}"-->
+                        <!--                                    th:text="${projet.prestation.name}">Basic form</a>-->
+                        <!--                            </li>-->
+
+
+                        <!--                        </ul>-->
+                    </li>
+                    <li class="landing_link">
+                        <a th:href="@{/services}"><i class="fa fa-plus"></i> <span class="nav-label">Ajouter un projet</span> </a>
+                    </li>
+
+                </ul>
+
+            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const profileIcon = document.querySelector('.profile-icon');
+                    if (profileIcon) {
+                        // Generate random color
+                        const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+                        profileIcon.style.backgroundColor = randomColor;
+                    }
+                });
+            </script>
+        </nav>
+
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0" th:replace="Client/index.html :: header">
+
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i
+                                class="fa fa-bars"></i> </a>
+                        <form role="search" class="navbar-form-custom" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="Search for something..." class="form-control"
+                                    name="top-search" id="top-search">
+                            </div>
+                        </form>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-messages dropdown-menu-right">
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                                <i class="fa fa-bell"></i> <span class="label label-primary">8</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                            </ul>
+                        </li>
+
+
+                        <li>
+                            <a th:href="@{/logout}">
+                                <i class="fa fa-sign-out"></i> Log out
+                            </a>
+                        </li>
+                        <li>
+                            <a class="right-sidebar-toggle">
+                                <i class="fa fa-tasks"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+
+            <div class="row border-bottom white-bg dashboard-header">
+                <div class="container-fluid">
+                    <div class="ibox col-12">
+                        <div class="ibox-header">
+                            <div class="row wrapper white-bg page-heading">
+                                <div class="col-lg-9">
+                                    <h2 th:text="${projet.name}"></h2>
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item">
+                                            <a th:href="@{/Client/index.html}">Projets</a>
+                                        </li>
+                                        <li class="breadcrumb-item active">
+                                            <strong th:text="${projet.prestation.name}"></strong>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <table id="docs-table" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" th:text="${projet.prestation.name}" style="text-align: center;">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Etat du projet</td>
+                                        <td>
+                                            <span class="label"
+                                                  th:classappend="${projet?.etatProjet == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).NOT_STARTED ? 'label-default' :
+                                                                  projet?.etatProjet == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).STARTED ? 'label-warning' :
+                                                                  projet?.etatProjet == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).FINISHED ? 'label-success' : ''}"
+                                                  th:text="${projet?.etatProjet?.displayName}">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Paiment</td>
+                                        <td>
+                                            <span
+                                                th:text="${projet.paymentStatus != null && projet.paymentStatus.displayName == T(org.baeldung.persistence.model.architecture.Enums.PaymentStatus).PAID.displayName ? 'Payé' : 'Non Payé'}"
+                                                class="label"
+                                                th:classappend="${projet.paymentStatus.displayName == T(org.baeldung.persistence.model.architecture.Enums.PaymentStatus).PAID.displayName ? ' label-primary' : ''}">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date de creation</td>
+                                        <td
+                                            th:text="${projet.creationDate.format(T(java.time.format.DateTimeFormatter).ofPattern('dd.MM.yyyy'))}">
+                                        </td>
+                                    </tr>
+                                    <tr> 
+                                        <td>Chef de projet</td>
+                                        <td>
+                                            <form action="/SuperAdmin/projet/updateChef" method="post">
+                                                <input type="hidden" name="projectId" th:value="${projet.id}">
+                                                <select class="form-control" name="chefId"
+                                                    th:attr="data-project-id=${projet.id}" id="chef-select"
+                                                    style="width: 70%; display: inline;">
+                                                    <option value="" th:selected="${projet.chef == null}">Pas de
+                                                        chef</option>
+                                                    <option th:each="chef : ${chefs}" th:value="${chef.id}"
+                                                        th:text="${chef.firstName + ' ' + chef.lastName}"
+                                                        th:selected="${chef.id == projet.chef?.id}">
+                                                    </option>
+                                                </select>
+                                                <button style="width: 20%; margin-bottom: 6px;" type="submit"
+                                                    class="btn btn-primary" onclick="return confirm('Vous etes sur de changer le chef de ce projet')">Changer le chef de projet</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;" colspan="3">Documents</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Type</td>
+                                        <td>Document original</td>
+                                        <td>Document traité</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="document : ${projet.documents}">
+                                        <td th:text="${document.type}"></td>
+                                        <td>
+                                            <form th:action="@{/download/{documentId}(documentId=${document.id})}"
+                                                method="get" style="display: inline;">
+                                                <button class="btn btn-outline btn-success dim" type="submit"
+                                                    title="Download document">
+                                                    <i class="fa fa-download"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <div th:if="${document.executedDocuments != null}">
+                                                <form th:action="@{/download/{documentId}(documentId=${document.executedDocuments.id})}"
+                                                      method="get" style="display: inline;">
+                                                    <button class="btn btn-outline btn-success dim" type="submit" title="Download document">
+                                                        <i class="fa fa-download"></i> Download
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div th:if="${document.executedDocuments == null}">
+                                                <span>Document Pas Encours Traité</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="6">Tâches de projet</th>
+                                </tr>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Type d'emploi</th>
+                                    <th>Date de depart</th>
+                                    <th>DeadLine</th>
+                                    <th>Employee</th>
+                                    <th>Etat d'execution</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="task : ${projet.tasks}">
+                                    <td th:classappend="'title-item'"
+                                        th:text="${task.titre}"
+                                        th:onclick="'findTaskById(' + ${task.id} + ')'">
+                                        Titre
+                                    </td>
+                                    <td th:text="${task.employeeType}">Type Emploi</td>
+                                    <td th:text="${task.startDate}">Deadline</td>
+                                    <td th:text="${task.deadLine}">Deadline</td>
+                                    <td th:text="${task.user != null ? task.user.firstName + ' ' + task.user.lastName : 'Pas Assigné'}">Pas Encours</td>
+                                    <td th:text="${task.etat.displayName}"
+                                        th:classappend="${task.etat == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).FINISHED ? 'status-green' :
+                                                            (task.etat == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).NOT_STARTED ? 'status-red' :
+                                                            (task.etat == T(org.baeldung.persistence.model.architecture.Enums.EtatExecution).STARTED ? 'status-yellow' : 'status-default'))}">Status
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center;" colspan="4">Équipe de travail</th>
+                                </tr>
+                                <tr>
+                                    <td>Nom d'employé</td>
+                                    <td>Type d'emploi</td>
+                                    <td>Contact</td>
+                                    <td>Tel</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="task : ${projet.tasks}" th:if="${task.user != null}">
+                                    <td th:text="${task.user.firstName + ' ' + task.user.lastName}">Member Name</td>
+                                    <td th:text="${task.employeeType}">Role</td>
+                                    <td th:text="${task.user.email}">Email</td>
+                                    <td th:text="${task.user.tel}">Tel</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+<!--        <div class="footer" style="position: fixed;">-->
+<!--            <div class="float-right">-->
+<!--                <strong>ARTIFICIAL &amp; BUSINESS INTELLIGENCE SOFT</strong>.-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <strong>Copyright</strong> ABIsoft &copy; 2019-2020-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+    <div id="right-sidebar" class="animated">
+        <div class="sidebar-container">
+
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="/js1/jquery-3.1.1.min.js"></script>
+    <script src="/js1/popper.min.js"></script>
+    <script src="/js1/bootstrap1.js"></script>
+    <script src="/js1/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/js1/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Flot -->
+    <script src="/js1/plugins/flot/jquery.flot.js"></script>
+    <script src="/js1/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="/js1/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="/js1/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="/js1/plugins/flot/jquery.flot.pie.js"></script>
+
+    <!-- Peity -->
+    <script src="/js1/plugins/peity/jquery.peity.min.js"></script>
+    <script src="/js1/demo/peity-demo.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/js1/inspinia.js"></script>
+    <script src="/js1/plugins/pace/pace.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="/js1/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- GITTER -->
+    <script src="/js1/plugins/gritter/jquery.gritter.min.js"></script>
+
+    <!-- Sparkline -->
+    <script src="/js1/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Sparkline demo data  -->
+    <script src="/js1/demo/sparkline-demo.js"></script>
+
+    <!-- ChartJS-->
+    <script src="/js1/plugins/chartJs/Chart.min.js"></script>
+
+    <!-- Toastr -->
+    <script src="/js1/plugins/toastr/toastr.min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chefSelect = document.getElementById('chef-select');
+
+            chefSelect.addEventListener('change', function () {
+                const selectedChefId = this.value;
+                const projectId = this.getAttribute('data-project-id');
+
+                fetch(`/SuperAdmin/projet/updateChef`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ projectId, chefId: selectedChefId })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to update chef.');
+                        }
+                        // return response.json();
+                    })
+                    .then(data => {
+                        // alert('Chef updated successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Error updating chef:', error);
+                        // alert('Failed to update chef.');
+                    });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const removeChefBtn = document.getElementById('remove-chef-btn');
+            const chefSelect = document.getElementById('chef-select');
+
+            removeChefBtn.addEventListener('click', () => {
+                const projectId = removeChefBtn.getAttribute('data-project-id');
+
+                fetch(`/SuperAdmin/Project/${projectId}/DeleteChef`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            chefSelect.value = "";
+                        } else {
+                            console.error('Failed to remove chef');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.assign-btn').click(function () {
+                const submissionId = $(this).data('submission-id');
+                const reviewerId = $('#reviewer-select').val();
+                console.log(submissionId);
+                console.log(reviewerId);
+
+
+
+                if (!reviewerId) {
+                    alert('Please select a reviewer.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/Chair/assignSubmission',
+                    type: 'POST',
+                    data: {
+                        reviewerId: reviewerId,
+                        submissionId: submissionId
+                    },
+                    success: function (response) {
+                        // alert('Submission assigned successfully!');
+                        // Optionally, reload or update the table
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        location.reload();
+
+                        // alert('Failed to assign submission.');
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        // $(document).ready(function () {
+        //     setTimeout(function () {
+        //         toastr.options = {
+        //             closeButton: true,
+        //             progressBar: true,
+        //             showMethod: 'slideDown',
+        //             timeOut: 4000
+        //         };
+        //         toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+
+        //     }, 1300);
+        $(document).ready(function () {
+            // Check if there is a message in the model
+            var message = [[${ #strings.escapeJavaScript(message) }]];
+            if (message) {
+                setTimeout(function () {
+                    toastr.options = {
+                        closeButton: true,
+                        progressBar: true,
+                        showMethod: 'slideDown',
+                        timeOut: 4000
+                    };
+                    toastr.success(message, 'Submission Status');
+                }, 1300);
+            }
+        });
+
+    </script>
+</body>
+
+</html>

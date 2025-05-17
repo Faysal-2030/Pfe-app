@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/vendors.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/fontello/css/fontello.css"> <!-- Corrected path -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+    
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+    <header>
+    <div id="top_line">
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                </div>
+                <div class="col-6">
+                    <ul id="top_links" style="display: flex; justify-content: flex-end; gap: 15px; list-style: none; padding: 0; margin: 0;">
+                        <!-- Avant connexion -->
+                        <li sec:authorize="!isAuthenticated()">
+                            <a id="login-form" href="/login" style="text-decoration: none; color: #444;">Se connecter</a>
+                        </li>
+
+                        <!-- Après connexion -->
+                        <li sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 5px;">
+                            <i class="icon-user" style="font-size: 16px; color: #444;"></i>
+                            <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}" style="color: #444;">Nom</span>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="/logout" style="text-decoration: none; color: #444;">Se déconnecter</a>
+                        </li>
+
+                        <li>
+                            <a href="/wishlist.html" id="wishlist_link" style="text-decoration: none; color: #444;">Liste de souhaits</a>
+                        </li>
+                    </ul>
+                </div>
+            </div><!-- Fin de la ligne -->
+        </div><!-- Fin du conteneur -->
+    </div><!-- Fin de la ligne supérieure -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <div id="logo_home">
+                    <h1><a href="/index" title="Modèle de voyage City Tours">City Tours voyage</a></h1>
+                </div>
+            </div>
+            <nav class="col-9">
+                <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                <div class="main-menu">
+                    <div id="header_menu">
+                        <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                    </div>
+                    <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                    <ul>
+                        <li class="submenu">
+                            <a href="/index" class="show-submenu">Accueil</a>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="con-down-open-minii"></i></a>
+                            <ul class="hebergement-list">
+                                <li>
+                                    <a th:href="@{/Hebergement/APPARTEMENT/list}" class="second-level">🌐 Tous les types</a>
+                                </li>
+                                <li th:each="type : ${typesHebergement}">
+                                    <a th:href="@{'/Hebergement/' + ${type.name()} + '/list'}" th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}" class="second-level">
+                                        <span th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a>
+                            <ul>
+                                <li><a href="all_hotels_list.html">Liste de tous les hôtels</a></li>
+                                <li><a href="all_hotels_grid.html">Grille de tous les hôtels</a></li>
+                                <li><a href="all_hotels_grid_masonry.html">Tri des hôtels en maçonnerie</a></li>
+                                <li><a href="all_hotels_map_listing.html">Carte des hôtels</a></li>
+                                <li><a href="single_hotel.html">Page d'hôtel unique</a></li>
+                                <li><a href="single_hotel_working_booking.html">Réservation d'hôtel</a></li>
+                                <li><a href="single_hotel_contact.html">Contact hôtel</a></li>
+                                <li><a href="cart_hotel.html">Panier hôtel</a></li>
+                                <li><a href="payment_hotel.html">Paiement hôtel</a></li>
+                                <li><a href="confirmation_hotel.html">Confirmation hôtel</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                            <ul>
+                                <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                            </ul>
+                        </li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class="show-submenu">Evénements <i class="icon-down-open-mini"></i></a>
+                            <ul>
+                                <li><a href="all_restaurants_list.html">All restaurants list</a></li>
+                                <li><a href="all_restaurants_grid.html">All restaurants grid</a></li>
+                                <li><a href="all_restaurants_grid_masonry.html">All restaurants Sort Masonry</a></li>
+                                <li><a href="all_restaurants_map_listing.html">All restaurants map listing</a></li>
+                                <li><a href="single_restaurant.html">Single restaurant page</a></li>
+                                <li><a href="payment_restaurant.html">Booking restaurant</a></li>
+                                <li><a href="confirmation_restaurant.html">Confirmation restaurant</a></li>
+                            </ul>
+                        </li>
+                        <li class="megamenu submenu">
+                            <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                            <div class="menu-wrapper">
+                                	<div class="row">
+                                        <div class="col-lg-4">
+                                            <h3>Header styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Default transparent</a></li>
+                                                <li><a href="header_2.html">Plain color</a></li>
+                                                <li><a href="header_3.html">Plain color on scroll</a></li>
+                                                <li><a href="header_4.html">With socials on top</a></li>
+                                                <li><a href="header_5.html">With language selection</a></li>
+                                                <li><a href="header_6.html">With lang and conversion</a></li>
+                                                <li><a href="header_7.html">With full horizontal menu</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Footer styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Footer default</a></li>
+                                                <li><a href="footer_2.html">Footer style 2</a></li>
+                                                <li><a href="footer_3.html">Footer style 3</a></li>
+                                                <li><a href="footer_4.html">Footer style 4</a></li>
+                                                <li><a href="footer_6.html">Footer style 6</a></li>
+                                                <li><a href="footer_7.html">Footer style 7</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Shop section</h3>
+                                            <ul>
+                                                <li><a href="shop.html">Shop</a></li>
+                                                <li><a href="shop-single.html">Shop single</a></li>
+                                                <li><a href="shopping-cart.html">Shop cart</a></li>
+                                                <li><a href="checkout.html">Shop Checkout</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="about.html">About us</a></li>
+											   <li><a href="general_page.html">General page</a></li>
+												<li><a href="tourist_guide.html">Tourist guide</a></li>
+												 <li><a href="wishlist.html">Wishlist page</a></li>
+												 <li><a href="faq.html">Faq</a></li>
+												 <li><a href="faq_2.html">Faq smooth scroll</a></li>
+												 <li><a href="pricing_tables.html">Pricing tables</a></li>
+												 <li><a href="gallery_3_columns.html">Gallery 3 columns</a></li>
+												<li><a href="gallery_4_columns.html">Gallery 4 columns</a></li>
+												<li><a href="grid_gallery_1.html">Grid gallery</a></li>
+												<li><a href="grid_gallery_2.html">Grid gallery with filters</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="contact_us_1.html">Contact us 1</a></li>
+												<li><a href="contact_us_2.html">Contact us 2</a></li>
+												 <li><a href="blog_right_sidebar.html">Blog</a></li>
+												<li><a href="blog.html">Blog left sidebar</a></li>
+												<li><a href="login.html">Login</a></li>
+												<li><a href="register.html">Register</a></li>
+												<li><a href="invoice.html" target="_blank">Invoice</a></li>
+												<li><a href="404.html">404 Error page</a></li>
+												<li><a href="site_launch/index.html">Site launch / Coming soon</a></li>
+												<li><a href="timeline.html">Tour timeline</a></li>
+												<li><a href="page_with_map.html"><i class="icon-map"></i>  Full screen map</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Elements</h3>
+											<ul>
+												<li><a href="footer_2.html"><i class="icon-columns"></i> Footer with working newsletter</a></li>
+												<li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Icon pack 1 (1900)</a></li>
+												<li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Icon pack 2 (100)</a></li>
+												<li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Icon pack 3 (30)</a></li>
+												<li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Icon pack 4 (200)</a></li>
+												<li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Icon pack 5 (360)</a></li>
+												<li><a href="shortcodes.html"><i class="icon-tools"></i> Shortcodes</a></li>
+												<li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Responsive email template</a></li>
+												<li><a href="admin.html"><i class="icon-cog-1"></i> Admin area</a></li>
+                                                <li><a href="html_rtl/index.html"><i class="icon-align-right"></i>  RTL Version</a></li>
+											</ul>
+										</div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools" style="list-style:none; display:flex; gap:20px; align-items:center; padding:0; margin:0;">
+                            <!-- Bouton Recherche -->
+                            <li>
+                                <a href="javascript:void(0);" class="search-overlay-menu-btn" style="color:#fff; font-size:24px; text-decoration:none; display:flex; align-items:center;">
+                                <!-- Icône loupe SVG inline -->
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;">
+                                    <circle cx="11" cy="11" r="7"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                </a>
+                            </li>
+
+                            <!-- Panier déroulant -->
+                            <li>
+                                <div class="dropdown dropdown-cart" style="position:relative;">
+                                <a href="#0" data-bs-hover="dropdown" class="cart_bt" style="color:#fff; font-size:24px; text-decoration:none; display:flex; align-items:center; position:relative;">
+                                    <!-- Icône sac -->
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    <!-- Badge notification -->
+                                    <strong id="cart_count" style="position:absolute; top:-8px; right:-10px; background:#f44336; color:#fff; border-radius:50%; width:18px; height:18px; font-size:12px; display:flex; justify-content:center; align-items:center;">0</strong>
+                                </a>
+
+                                <!-- Menu déroulant du panier -->
+                                <ul class="dropdown-menu" id="cart_items" style="display:none; position:absolute; top:36px; right:0; background:#fff; color:#000; width:300px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); padding:10px; border-radius:4px; z-index:1000;">
+                                    <li style="display:flex; align-items:center; margin-bottom:10px;" data-price="36">
+                                        <div class="image" style="flex-shrink:0; margin-right:10px;">
+                                            <img src="/assets/img/thumb_cart_1.jpg" alt="Louvre museum" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                                        </div>
+                                        <div>
+                                            <strong><a href="#" style="color:#000; text-decoration:none;">Louvre museum</a></strong><br>
+                                            1x $36.00
+                                        </div>
+                                        <a href="javascript:void(0);" onclick="removeItem(this)" style="margin-left:auto; color:#f44336; font-size:18px; text-decoration:none;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </li>
+                                    <li style="display:flex; align-items:center; margin-bottom:10px;" data-price="72">
+                                        <div class="image" style="flex-shrink:0; margin-right:10px;">
+                                            <img src="/assets/img/thumb_cart_2.jpg" alt="Versailles tour" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                                        </div>
+                                        <div>
+                                            <strong><a href="#" style="color:#000; text-decoration:none;">Versailles tour</a></strong><br>
+                                            2x $36.00
+                                        </div>
+                                        <a href="javascript:void(0);" onclick="removeItem(this)" style="margin-left:auto; color:#f44336; font-size:18px; text-decoration:none;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </li>
+                                    <li style="display:flex; align-items:center; margin-bottom:10px;" data-price="36">
+                                        <div class="image" style="flex-shrink:0; margin-right:10px;">
+                                            <img src="/assets/img/thumb_cart_3.jpg" alt="Versailles tour" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                                        </div>
+                                        <div>
+                                            <strong><a href="#" style="color:#000; text-decoration:none;">Versailles tour</a></strong><br>
+                                            1x $36.00
+                                        </div>
+                                        <a href="javascript:void(0);" onclick="removeItem(this)" style="margin-left:auto; color:#f44336; font-size:18px; text-decoration:none;">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </li>
+                                    <li style="border-top:1px solid #ccc; padding-top:10px; font-weight:bold; display:flex; justify-content:space-between; margin-bottom:10px;">
+                                        <span>Total:</span> <span id="total_price">$144.00</span>
+                                    </li>
+                                    <li style="display:flex; gap:10px;">
+                                        <a href="cart.html" class="button_drop" style="flex:1; background:#f44336; color:#fff; text-align:center; padding:10px; border-radius:4px; text-decoration:none;">GO TO CART</a>
+                                        <a href="payment.html" class="button_drop outline" style="flex:1; border:2px solid #f44336; color:#f44336; text-align:center; padding:10px; border-radius:4px; text-decoration:none;">CHECK OUT</a>
+                                    </li>
+                                </ul>
+                                </div><!-- End dropdown-cart-->
+                            </li>
+                            </ul>
+                        </nav>
+                            </div><!-- End dropdown-cart-->
+                        </li>
+                    </ul>
+                </nav>
+			</div>
+		</div>
+		<!-- container -->
+	</header>
+	<!-- End Header -->
+
+
+	<section id="hero_2" class="background-image" data-background="url(/assets/img/slide_hero_2.jpg)">
+        <div class="opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.6)">
+		<div class="intro_title">
+			<h1 style="font-size: 36px; font-weight: bold; color: #fff;">Passer votre commande</h1>
+			<div class="bs-wizard row" style="margin-top: 20px;">
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum" style="font-size: 18px; color: #fff;">Votre panier</div>
+					<div class="progress">
+						<div class="progress-bar" style="background-color: #f0c14b;"></div>
+					</div>
+					<a href="cart_hotel.html" class="bs-wizard-dot" style="background-color: #f0c14b;"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum" style="font-size: 18px; color: #fff;">Vos détails</div>
+					<div class="progress">
+						<div class="progress-bar" style="background-color: #f0c14b;"></div>
+					</div>
+					<a href="payment_hotel.html" class="bs-wizard-dot" style="background-color: #f0c14b;"></a>
+				</div>
+
+				<div class="col-4 bs-wizard-step complete">
+					<div class="text-center bs-wizard-stepnum" style="font-size: 18px; color: #fff;">Terminé !</div>
+					<div class="progress">
+						<div class="progress-bar" style="background-color: #f0c14b;"></div>
+					</div>
+					<a href="#" class="bs-wizard-dot" style="background-color: #f0c14b;"></a>
+				</div>
+
+			</div>
+			<!-- End bs-wizard -->
+		</div>
+		<!-- End intro-title -->
+        </div>
+        <!-- End opacity-mask-->
+	</section>
+	<!-- End Section hero_2 -->
+
+	<main>
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li><a href="#">Accueil</a>
+					</li>
+					<li><a href="#">Catégorie</a>
+					</li>
+					<li>Page active</li>
+				</ul>
+			</div>
+		</div>
+		<!-- End position -->
+
+		<div class="container margin_60">
+			<div class="row">
+				<div class="col-lg-8 add_bottom_15">
+
+					<div class="form_title">
+						<h3><strong><i class="icon-ok"></i></strong>Merci !</h3>
+						<p>
+							Votre réservation a été confirmée avec succès.
+						</p>
+					</div>
+					<div class="step">
+						<p>
+							Merci d'avoir choisi notre service. Nous espérons que vous passerez un agréable séjour.
+						</p>
+					</div>
+					<!--End step -->
+
+					<div class="form_title">
+						<h3><strong><i class="icon-tag-1"></i></strong>Résumé de la réservation</h3>
+						<p>
+							Voici les détails de votre réservation.
+						</p>
+					</div>
+					<div class="step">
+						<table class="table table-striped confirm">
+							<tbody>
+								<tr>
+									<td>
+										<strong>Nom</strong>
+									</td>
+									<td>
+										Jean Dupont
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>Date d'arrivée</strong>
+									</td>
+									<td>
+										10 Avril 2025</td>
+								</tr>
+								<tr>
+									<td><strong>Date de départ</strong>
+									</td>
+									<td>
+										12 Avril 2025
+										<br>
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Chambres</strong>
+									</td>
+									<td>1 chambre double</td>
+								</tr>
+								<tr>
+									<td><strong>Nuits</strong>
+									</td>
+									<td>2</td>
+								</tr>
+								<tr>
+									<td><strong>Adultes</strong>
+									</td>
+									<td>2</td>
+								</tr>
+								<tr>
+									<td><strong>Enfants</strong>
+									</td>
+									<td>0</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>Type de paiement</strong>
+									</td>
+									<td>
+										Carte de crédit
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<strong>COÛT TOTAL</strong>
+									</td>
+									<td>
+										154 €
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div style="text-align: center; margin-top: 20px;">
+                            <p style="font-size: 16px; color: #444; margin-bottom: 15px;">
+                                Veuillez vérifier attentivement les détails de votre réservation avant de confirmer.
+                            </p>
+                            <button class="btn_full" style="background-color: #f0c14b; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
+                                Confirmer la réservation
+                            </button>
+                        </div>
+					</div>
+					<!--End step -->
+				</div>
+				<!--End col -->
+
+				<aside class="col-lg-4">
+					<div class="box_style_1">
+						<h3 class="inner">Merci !</h3>
+						<p>
+							Si vous avez des questions, n'hésitez pas à nous contacter.
+						</p>
+						<hr>
+						<a class="btn_full_outline" href="invoice.html" target="_blank">Voir votre facture</a>
+					</div>
+					<div class="box_style_4">
+						<i class="icon_set_1_icon-89"></i>
+						<h4>Des <span>questions ?</span></h4>
+						<a href="tel://004542344599" class="phone">+45 423 445 99</a>
+						<small>Du lundi au vendredi de 9h00 à 19h30</small>
+					</div>
+				</aside>
+
+			</div>
+			<!--End row -->
+		</div>
+		<!--End container -->
+	</main>
+	<!-- End main -->
+
+	<footer class="revealed">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Besoin d'aide ?</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-phone-volume"></i>
+                        +45 423 445 99
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        help@citytours.com
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3>À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Connexion</a></li>
+                        <li><a href="#">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3>Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="English" selected>Anglais</option>
+                            <option value="French">Français</option>
+                            <option value="Spanish">Espagnol</option>
+                            <option value="Russian">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="USD" selected>USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-twitter-x"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p>© Citytours 2024</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+	
+	<!-- Jquery -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+
+<!-- SWITCHER  -->
+
+    <script src="/assets/js/switcher.js"></script>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/confirmation_hotel.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:10 GMT -->
+</html>

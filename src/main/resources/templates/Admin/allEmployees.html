@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIGMA | Clients</title>
+
+    <link href="/css1/bootstrap.min1.css" rel="stylesheet">
+    <link href="/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="/css1/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="/css1/plugins/footable/footable.core.css" rel="stylesheet">
+
+    <link href="/css1/animate1.css" rel="stylesheet">
+    <link href="/css1/style1.css" rel="stylesheet">
+
+
+    <style>
+        #project-filters{
+            display: flex;
+            gap: 20px;
+        }
+        #project-filters select{
+            width: 50%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <nav class="navbar-default navbar-static-side" role="navigation" th:replace="SuperAdmin/index.html :: navbar"></nav>
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0" th:replace="Client/index.html :: header">
+
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i
+                                class="fa fa-bars"></i> </a>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Employees</h2>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/SuperAdmin/index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <strong>Employees</strong>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+            <div class="wrapper wrapper-content  animated fadeInRight">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <h2>All Employees</h2><br>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div id="project-filters" class="col-sm-7 m-b-xs">
+                                        <select id="country-filter" class="form-control-sm form-control input-s-sm inline">
+                                            <option value="">Tous les pays</option>
+                                            <option th:each="country : ${Countries}" th:value="${country.id}" th:text="${country.name}"></option>
+                                        </select>
+
+                                        <select id="role-filter" class="form-control-sm form-control input-s-sm inline">
+                                            <option value="">Tous les roles</option>
+                                            <option th:each="role : ${Roles}" th:value="${role.name()}" th:text="${role.displayName}"></option>
+                                        </select>
+
+                                        <select id="etat-filter" class="form-control-sm form-control input-s-sm inline">
+                                            <option value="">Etat</option>
+                                            <option value="true">Enabled</option>
+                                            <option value="false">Disabled</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-5">
+                                        <div class="input-group">
+                                            <input id="search-filter" placeholder="Search" type="text" class="form-control form-control-sm">
+                                            <span class="input-group-append"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="footable table table-stripped toggle-arrow-tiny">
+                                    <thead>
+                                    <tr>
+                                        <th data-toggle="true">Nom d'employee</th>
+                                        <th>Paye</th>
+                                        <th>Etat du compte</th>
+                                        <th>Role</th>
+                                        <th data-hide="all">Email</th>
+                                        <th data-hide="all">Telephone</th>
+                                        <th data-hide="all">Date d'inscription</th>
+                                        <th data-hide="all">Compteur du taches</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}"
+                                        th:data-user-id="${user.id}">
+                                        <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                                        <td th:text="${user.paye.name}"></td>
+                                        <td th:text="${user.enabled ? 'Enabled' : 'Disabled'}"></td>
+                                        <td th:text="${user.employeeType}"></td>
+                                        <td th:text="${user.email}"></td>
+                                        <td th:text="${user.tel}"></td>
+                                        <td th:text="${user.creationDate}"></td>
+                                        <td th:text="${user.taches.size()}"></td>
+                                        <td>
+                                            <a th:href="@{/SuperAdmin/employee/{id}(id=${user.id})}">
+                                                <i class="fa fa-eye text-navy"></i> View
+                                            </a>
+<!--                                                <a th:href="@{/SuperAdmin/User/{id}/Disable(id=${user.id})}">-->
+<!--                                                    <i class="fa fa-stop-circle text-navy"></i> Enable/Disable-->
+<!--                                                </a>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="5">
+                                            <ul class="pagination float-right"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Mainly scripts -->
+    <script src="/js1/jquery-3.1.1.min.js"></script>
+    <script src="/js1/popper.min.js"></script>
+    <script src="/js1/bootstrap1.js"></script>
+    <script src="/js1/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/js1/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- FooTable -->
+    <script src="/js1/plugins/footable/footable.all.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="/js1/inspinia.js"></script>
+    <script src="/js1/plugins/pace/pace.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            $(document.body).on("click", ".client-link", function (e) {
+                e.preventDefault()
+                $(".selected .tab-pane").removeClass('active');
+                $($(this).attr('href')).addClass("active");
+            });
+
+        });
+
+
+    </script>
+    <script>
+        $(document).ready(function() {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add event listener for all role dropdowns
+            const roleSelects = document.querySelectorAll('.role-select');
+            roleSelects.forEach(select => {
+                select.addEventListener('change', function () {
+                    const userId = this.getAttribute('data-user-id'); // Get user ID
+                    const newRole = this.value; // Get selected role
+
+                    // Send AJAX request
+                    fetch(`/SuperAdmin/users/updateRole`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content') // Include CSRF token if required
+                        },
+                        body: JSON.stringify({ userId, newRole }) // Send userId and newRole as JSON
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to update role.');
+                            }
+                            // return response.json();
+                        })
+                        .then(data => {
+                            // alert(`Role updated to ${newRole} successfully.`);
+                        })
+                        .catch(error => {
+                            console.error('Error updating role:', error);
+                            // alert('Failed to update role.');
+                        });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('country-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('role-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('etat-filter').addEventListener('change', fetchFilteredData);
+            document.getElementById('search-filter').addEventListener('input', fetchFilteredData);
+
+            function fetchFilteredData() {
+                const selectedCountry = document.getElementById('country-filter').value;
+                const selectedRole = document.getElementById('role-filter').value;
+                const selectedEtat = document.getElementById('etat-filter').value;
+                const searchQuery = document.getElementById('search-filter').value.trim();
+
+                // document.getElementById('loading-indicator').style.display = 'block';
+
+                fetch(`/SuperAdmin/filteredEmployees?countryId=${selectedCountry}&role=${selectedRole}&etat=${selectedEtat}&search=${searchQuery}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Filtered employees:', data);
+                        updateTable(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+
+            }
+
+            function updateTable(employees) {
+                const tbody = document.querySelector('table tbody');
+                tbody.innerHTML = ''; // Clear the table body
+
+                employees.forEach(employee => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${employee.name || ''}</td>
+                        <td>${employee.paye || ''}</td>
+                        <td>${employee.etat || ''}</td>
+                        <td>${employee.role || ''}</td>
+                        <td>${employee.email || ''}</td>
+                        <td>${employee.tel || ''}</td>
+                        <td>${employee.joinDate || ''}</td>
+                        <td>${employee.taskCount || 0}</td>
+                        <td>
+                            <a href="/SuperAdmin/employee/${employee.id}">
+                                <i class="fa fa-eye text-navy"></i> View
+                            </a>
+                        </td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+
+                const footable = $('.footable');
+                footable.footable();
+                footable.trigger('footable_redraw');
+            }
+
+        });
+
+        $(document).ready(function() {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>

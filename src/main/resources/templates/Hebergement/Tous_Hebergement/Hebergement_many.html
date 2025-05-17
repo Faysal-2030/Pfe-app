@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<!-- Mirrored from www.ansonika.com/citytours/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:39:30 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Citytours - Premium site template for city tours agencies, transfers and tickets.">
+    <meta name="author" content="Ansonika">
+    <title>CITY TOURS - Voyage au Cœur du Maroc</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="/assets/img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="/assets/img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="/assets/img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="/assets/img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- GOOGLE WEB FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+
+    <!-- CSS de ion.rangeSlider -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ion-rangeslider@2.3.1/css/ion.rangeSlider.min.css"/>
+    <!-- JS de ion.rangeSlider -->
+    <script src="https://cdn.jsdelivr.net/npm/ion-rangeslider@2.3.1/js/ion.rangeSlider.min.js"></script>
+
+
+
+    <!-- COMMON CSS -->
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+	<link href="/assets/css/vendors.css" rel="stylesheet">
+
+	<!-- ALTERNATIVE COLORS CSS -->
+    <link href="#" id="colors" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-spinner sk-spinner-wave">
+            <div class="sk-rect1"></div>
+            <div class="sk-rect2"></div>
+            <div class="sk-rect3"></div>
+            <div class="sk-rect4"></div>
+            <div class="sk-rect5"></div>
+        </div>
+    </div>
+    <!-- End Preload -->
+
+    <div class="layer"></div>
+    <!-- Mobile menu overlay mask -->
+
+    <!-- Header================================================== -->
+    <header>
+        <div id="top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <i class="icon-phone"></i><strong>‪+212 618311344‬</strong>
+                    </div>
+                    <div class="col-6">
+                        <ul id="top_links">
+                            <!-- Avant connexion -->
+                            <li sec:authorize="!isAuthenticated()">
+                                <a id="login-form" href="/login" >Se connecter</a>
+                            </li>
+    
+                            <!-- Après connexion -->
+                            <li sec:authorize="isAuthenticated()">
+                                <i class="icon-user"></i>
+                                <span th:if="${connectedUser != null}" th:text="${connectedUser.fullName}">Nom</span>
+                            </li>
+                            <li sec:authorize="isAuthenticated()">
+                                <a href="/logout">Se déconnecter</a>
+                            </li>
+    
+                            <li>
+                                <a href="/wishlist.html" id="wishlist_link">Liste de souhaits</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div><!-- End row -->
+            </div><!-- End container-->
+        </div><!-- End top line -->
+    
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div id="logo_home">
+                    	<h1><a href="/index" title="City tours travel template">City Tours travel</a></h1>
+                    </div>
+                </div>
+                <nav class="col-9">
+                    <a class="cmn-toggle-switch cmn-toggle-switch__htx open_close" href="javascript:void(0);"><span>Menu mobile</span></a>
+                    <div class="main-menu">
+                        <div id="header_menu">
+                            <img src="/assets/img/logo_sticky.png" width="160" height="34" alt="City tours">
+                        </div>
+                        <a href="#" class="open_close" id="close_in"><i class="icon_set_1_icon-77"></i></a>
+                        <ul>
+                            <li class="submenu">
+                                <a href="/index" class="show-submenu">Accueil </a>
+                            </li>
+                        <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Hébergements <i class="icon-down-open-mini"></i>
+                            </a>
+                        <ul class="hebergement-list">
+                            <!-- Lien pour tous les types -->
+                            <li>
+                                <a th:href="@{/Hebergement/APPARTEMENT/list}" class="second-level">🌐 Tous les types
+                                </a>
+                            </li>
+                            <!-- Liens dynamiques pour chaque type -->
+                            <li th:each="type : ${typesHebergement}">
+                                <a th:href="@{'/Hebergement/' + ${type.name()} + '/list'}" th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}" class="second-level">
+                            <!-- Dynamically rendered type names -->
+                                <span th:text="${#strings.capitalize(type.name().toLowerCase().replace('_',' '))}"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Gastronomie <i class="icon-down-open-mini"></i></a><ul>
+                                    <li><a href="all_hotels_list.html">Liste des hôtels</a></li>
+                                    <li><a href="all_hotels_grid.html">Grille des hôtels</a></li>
+                                    <li><a href="all_hotels_grid_masonry.html">Grille triée des hôtels</a></li>
+                                    <li><a href="all_hotels_map_listing.html">Carte des hôtels</a></li>
+                                    <li><a href="single_hotel.html">Page d'hôtel</a></li>
+                                    <li><a href="single_hotel_working_booking.html">Réservation d'hôtel</a></li>
+                                    <li><a href="single_hotel_contact.html">Contact hôtel</a></li>
+                                    <li><a href="cart_hotel.html">Panier hôtel</a></li>
+                                    <li><a href="payment_hotel.html">Paiement hôtel</a></li>
+                                    <li><a href="confirmation_hotel.html">Confirmation hôtel</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Transports  <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="/public/Transports/infosTransports.html">Informations</a></li>
+                                    <li><a href="/Client/Transports/reservationTransports.html">Réservations</a></li>
+                                 
+                                </ul>
+                            </li>
+                              <li class="submenu">
+                                <a href="javascript:void(0);" class="show-submenu">Événements <i class="icon-down-open-mini"></i></a>
+                                <ul>
+                                    <li><a href="all_restaurants_list.html">Liste de tous les restaurants</a></li>
+                                    <li><a href="all_restaurants_grid.html">Grille de tous les restaurants</a></li>
+                                    <li><a href="all_restaurants_grid_masonry.html">Grille triée des restaurants</a></li>
+                                    <li><a href="all_restaurants_map_listing.html">Carte des restaurants</a></li>
+                                    <li><a href="single_restaurant.html">Page d'un restaurant</a></li>
+                                    <li><a href="payment_restaurant.html">Réservation de restaurant</a></li>
+                                    <li><a href="confirmation_restaurant.html">Confirmation de restaurant</a></li>
+                                </ul>
+                            </li>
+
+                             <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Bonus<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+                                        <div class="col-lg-4">
+                                            <h3>Styles d'en-tête</h3>
+                                            <ul>
+                                                <li><a href="index.html">Transparent par défaut</a></li>
+                                                <li><a href="header_2.html">Couleur unie</a></li>
+                                                <li><a href="header_3.html">Couleur unie au défilement</a></li>
+                                                <li><a href="header_4.html">Avec réseaux sociaux en haut</a></li>
+                                                <li><a href="header_5.html">Avec sélection de langue</a></li>
+                                                <li><a href="header_6.html">Avec langue et conversion</a></li>
+                                                <li><a href="header_7.html">Avec menu horizontal complet</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Footer styles</h3>
+                                            <ul>
+                                                <li><a href="index.html">Footer default</a></li>
+                                                <li><a href="footer_2.html">Footer style 2</a></li>
+                                                <li><a href="footer_3.html">Footer style 3</a></li>
+                                                <li><a href="footer_4.html">Footer style 4</a></li>
+                                                <li><a href="footer_6.html">Footer style 6</a></li>
+                                                <li><a href="footer_7.html">Footer style 7</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <h3>Section Boutique</h3>
+                                            <ul>
+                                                <li><a href="shop.html">Boutique</a></li>
+                                                <li><a href="shop-single.html">Article unique</a></li>
+                                                <li><a href="shopping-cart.html">Panier</a></li>
+                                                <li><a href="checkout.html">Passer à la caisse</a></li>
+                                            </ul>
+                                        </div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                            <li class="megamenu submenu">
+                                <a href="javascript:void(0);" class="show-submenu-mega">Pages<i class="icon-down-open-mini"></i></a>
+                                <div class="menu-wrapper">
+                                	<div class="row">
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="about.html">À propos de nous</a></li>
+											   <li><a href="general_page.html">Page générale</a></li>
+												<li><a href="tourist_guide.html">Guide touristique</a></li>
+												 <li><a href="wishlist.html">Page de souhaits</a></li>
+												 <li><a href="faq.html">FAQ</a></li>
+												 <li><a href="faq_2.html">FAQ défilement fluide</a></li>
+												 <li><a href="pricing_tables.html">Tableaux de prix</a></li>
+												 <li><a href="gallery_3_columns.html">Galerie 3 colonnes</a></li>
+												<li><a href="gallery_4_columns.html">Galerie 4 colonnes</a></li>
+												<li><a href="grid_gallery_1.html">Galerie en grille</a></li>
+												<li><a href="grid_gallery_2.html">Galerie en grille avec filtres</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Pages</h3>
+											<ul>
+												<li><a href="contact_us_1.html">Contactez-nous 1</a></li>
+												<li><a href="contact_us_2.html">Contactez-nous 2</a></li>
+												 <li><a href="blog_right_sidebar.html">Blog</a></li>
+												<li><a href="blog.html">Blog avec barre latérale gauche</a></li>
+												<li><a href="login.html">Connexion</a></li>
+												<li><a href="register.html">Inscription</a></li>
+												<li><a href="invoice.html" target="_blank">Facture</a></li>
+												<li><a href="404.html">Page d'erreur 404</a></li>
+												<li><a href="site_launch/index.html">Lancement du site / À venir</a></li>
+												<li><a href="timeline.html">Chronologie de la visite</a></li>
+												<li><a href="page_with_map.html"><i class="icon-map"></i>  Carte plein écran</a></li>
+											</ul>
+										</div>
+										<div class="col-lg-4">
+											<h3>Éléments</h3>
+											<ul>
+												<li><a href="footer_2.html"><i class="icon-columns"></i> Pied de page avec newsletter fonctionnelle</a></li>
+												<li><a href="icon_pack_1.html"><i class="icon-inbox-alt"></i> Pack d'icônes 1 (1900)</a></li>
+												<li><a href="icon_pack_2.html"><i class="icon-inbox-alt"></i> Pack d'icônes 2 (100)</a></li>
+												<li><a href="icon_pack_3.html"><i class="icon-inbox-alt"></i> Pack d'icônes 3 (30)</a></li>
+												<li><a href="icon_pack_4.html"><i class="icon-inbox-alt"></i> Pack d'icônes 4 (200)</a></li>
+												<li><a href="icon_pack_5.html"><i class="icon-inbox-alt"></i> Pack d'icônes 5 (360)</a></li>
+												<li><a href="shortcodes.html"><i class="icon-tools"></i> Codes courts</a></li>
+												<li><a href="newsletter_template/newsletter.html" target="blank"><i class=" icon-mail"></i> Modèle d'email responsive</a></li>
+												<li><a href="admin.html"><i class="icon-cog-1"></i> Zone admin</a></li>
+                                                <li><a href="html_rtl/index.html"><i class="icon-align-right"></i>  Version RTL</a></li>
+											</ul>
+										</div>
+                                    </div><!-- End row -->
+                                </div><!-- End menu-wrapper -->
+                            </li>
+                        </ul>
+                    </div><!-- End main-menu -->
+                    <ul id="top_tools">
+    <li>
+        <a href="javascript:void(0);" class="search-overlay-menu-btn"><i class="icon_search"></i></a>
+    </li>
+    <li>
+        <div class="dropdown dropdown-cart">
+            <a href="#0" data-bs-hover="dropdown" class="cart_bt"><i class="icon_bag_alt"></i><strong>3</strong></a>
+            <ul class="dropdown-menu" id="cart_items">
+                <li>
+                    <div class="image"><img src="/assets/img/thumb_cart_1.jpg" alt="image"></div>
+                    <strong><a href="#">Musée du Louvre</a> 1x $36.00</strong>
+                    <a href="#" class="action"><i class="icon-trash"></i></a>
+                </li>
+                <li>
+                    <div class="image"><img src="/assets/img/thumb_cart_2.jpg" alt="image"></div>
+                    <strong><a href="#">Visite de Versailles</a> 2x $36.00</strong>
+                    <a href="#" class="action"><i class="icon-trash"></i></a>
+                </li>
+                <li>
+                    <div class="image"><img src="/assets/img/thumb_cart_3.jpg" alt="image"></div>
+                    <strong><a href="#">Visite de Versailles</a> 1x $36.00</strong>
+                    <a href="#" class="action"><i class="icon-trash"></i></a>
+                </li>
+                <li>
+                    <div>Total: <span>$120.00</span></div>
+                    <a href="cart.html" class="button_drop">Aller au panier</a>
+                    <a href="payment.html" class="button_drop outline">Payer</a>
+                </li>
+            </ul>
+        </div><!-- End dropdown-cart -->
+    </li>
+</ul>
+                </nav>
+			</div>
+		</div>
+		<!-- container -->
+	</header>
+	<!-- End Header -->
+
+	<section class="parallax-window" data-parallax="scroll" data-image-src="/assets/img/hotels_bg.jpg" data-natural-width="1400" data-natural-height="470">
+		<div class="parallax-content-1 opacity-mask" data-opacity-mask="rgba(0, 0, 0, 0.6)">
+			<div class="animated fadeInDown">
+				<h1>Hôtels à Paris</h1>
+				<p>Cursus neque cursus curae ante scelerisque vehicula.</p>
+			</div>
+		</div>
+	</section>
+	<!-- End section -->
+
+	<main>
+		<div id="position">
+			<div class="container">
+				<ul>
+					<li><a href="#">Accueil</a></li>
+					<li><a href="#">Catégorie</a></li>
+					<li>Page active</li>
+				</ul>
+			</div>
+		</div>
+		<!-- Position -->
+
+		<div class="collapse" id="collapseMap">
+			<div id="map" class="map"></div>
+		</div>
+		<!-- End Map -->
+
+		<div class="container margin_60">
+			<div class="row">
+				<aside class="col-lg-3">
+					<p>
+						<a class="btn_map" data-bs-toggle="collapse" href="#collapseMap" aria-expanded="false" aria-controls="collapseMap" data-text-swap="Masquer la carte" data-text-original="Voir sur la carte">Voir sur la carte</a>
+					</p>
+
+					<div id="filters_col">
+                        <a data-bs-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters" id="filters_col_bt">
+                            <i class="icon_set_1_icon-65"></i>Filtres
+                        </a>
+                        <div class="collapse show" id="collapseFilters">
+                            <div class="filter_type">
+                                <h6>Prix</h6>
+                                <div style="padding:10px 0;">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                        <span id="price_slider_from" style="background:#f36b6b;color:#fff;padding:3px 12px;border-radius:8px;min-width:40px;text-align:center; font-weight:500;">$24</span>
+                                        <span id="price_slider_to" style="background:#f36b6b;color:#fff;padding:3px 12px;border-radius:8px;min-width:40px;text-align:center; font-weight:500;">$100</span>
+                                    </div>
+                                    <input type="text" id="price_slider" name="price_slider" value="" />
+                                </div>
+                            </div>   
+                            <div class="filter_type">
+                                <h6>Catégorie d'étoiles</h6>
+                                <ul style="padding-left:0;">
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>
+                                            <span style="color:#f9a825;font-size:18px;">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                                            <span style="color:#bbb;font-size:18px;"></span>
+                                        </span>
+                                        <span style="margin-left:8px;color:#888;">(15)</span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>
+                                            <span style="color:#f9a825;font-size:18px;">&#9733;&#9733;&#9733;&#9733;</span>
+                                            <span style="color:#bbb;font-size:18px;">&#9733;</span>
+                                        </span>
+                                        <span style="margin-left:8px;color:#888;">(10)</span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>
+                                            <span style="color:#f9a825;font-size:18px;">&#9733;&#9733;&#9733;</span>
+                                            <span style="color:#bbb;font-size:18px;">&#9733;&#9733;</span>
+                                        </span>
+                                        <span style="margin-left:8px;color:#888;">(22)</span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>
+                                            <span style="color:#f9a825;font-size:18px;">&#9733;&#9733;</span>
+                                            <span style="color:#bbb;font-size:18px;">&#9733;&#9733;&#9733;</span>
+                                        </span>
+                                        <span style="margin-left:8px;color:#888;">(08)</span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>
+                                            <span style="color:#f9a825;font-size:18px;">&#9733;</span>
+                                            <span style="color:#bbb;font-size:18px;">&#9733;&#9733;&#9733;&#9733;</span>
+                                        </span>
+                                        <span style="margin-left:8px;color:#888;">(08)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="filter_type">
+                                <h6>Note des avis</h6>
+                                <ul style="padding-left:0;">
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>Superb: 9+ <span style="color:#888;">(77)</span></span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>Good: 7+ <span style="color:#888;">(909)</span></span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;margin-bottom:6px;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>Pleasant: 6+ <span style="color:#888;">(1196)</span></span>
+                                    </li>
+                                    <li style="display:flex;align-items:center;">
+                                        <input type="checkbox" style="margin-right:8px;">
+                                        <span>Pas d'évaluation <span style="color:#888;">(198)</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="filter_type">
+                                <h6>Équipements</h6>
+                                <ul>
+                                    <li>
+                                        <label class="container_check">
+                                            Animaux autorisés
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Wifi
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Spa
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Restaurant
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Piscine
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Parking
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_check">
+                                            Centre de fitness
+                                            <input type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="filter_type">
+                                <h6>Quartier</h6>
+                                <ul class="mb-0">
+                                    <li>
+                                        <label class="container_radio">
+                                             Centre de Paris
+                                            <input type="radio" name="location">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_radio">
+                                             La Défense
+                                            <input type="radio" name="location">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_radio">
+                                            Le Marais
+                                            <input type="radio" name="location">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="container_radio">
+                                            Quartier Latin
+                                            <input type="radio" name="location">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--End collapse -->
+                    </div>
+                    <!--End filters col-->
+				</aside>
+				<!--End aside -->
+
+				<div class="col-lg-9">
+
+					<div id="tools">
+						<div class="row justify-content-between">
+							<div class="col-md-3 col-sm-4">
+								<div class="styled-select-filters">
+									<select name="sort_price" id="sort_price" data-filter-group="sort_price">
+                                        <option value="*" data-filter-value="" selected="">Afficher tout</option>
+										<option value="lower_price" data-filter-value=".lower_price">Prix le plus bas</option>
+										<option value="higher_price" data-filter-value=".higher_price">Prix le plus élevé</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6 col-sm-4 d-none d-sm-block text-end">
+								<a href="#" class="bt_filters"><i class="icon-th"></i></a> <a href="all_hotels_list.html" class="bt_filters"><i class=" icon-list"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="isotope-wrapper">
+                        <div class="row">
+                            <div th:each="hotel : ${hotels}" class="col-md-6 isotope-item lower_price">
+                                <div class="hotel_container">
+                                    <div class="ribbon_3 popular"><span>Populaire</span></div>
+                                    <div class="img_container">
+                                        <a th:href="@{'/hotels/' + ${hotel.id}}">
+                                            <img src="/assets/img/hotel_1.jpg" width="800" height="533" class="img-fluid" alt="Image">
+                                            <div class="score"><span>7.5</span>Bon</div>
+                                            <div class="short_info hotel">
+                                                <span class="price"><sup>$</sup><span th:text="${hotel.prixParNuit}">0</span></span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="hotel_title">
+                                        <h3><strong th:text="${hotel.nom}">Nom Hôtel</strong></h3>
+                                        <div class="rating">
+                                            <i th:each="i : ${#numbers.sequence(1, 5)}"
+                                            th:classappend="${i <= hotel.nombreEtoiles} ? 'icon-star voted' : 'icon-star-empty'"></i>
+                                        </div>
+                                        <div class="wishlist">
+                                            <a class="tooltip_flip tooltip-effect-1" href="#">+<span class="tooltip-content-flip"><span class="tooltip-back">Ajouter à la liste de souhaits</span></span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					
+					<nav aria-label="Page navigation">
+						<ul class="pagination justify-content-center">
+							<li class="page-item">
+								<a class="page-link" href="#" aria-label="Précédent">
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only">Précédent</span>
+								</a>
+							</li>
+							<li class="page-item active"><span class="page-link">1</span>
+							</li>
+							<li class="page-item"><a class="page-link" href="#">2</a></li>
+							<li class="page-item"><a class="page-link" href="#">3</a></li>
+							<li class="page-item">
+								<a class="page-link" href="#" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Suivant</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<!-- end pagination-->
+
+				</div>
+				<!-- End col lg 9 -->
+			</div>
+			<!-- End row -->
+		</div>
+		<!-- End container -->
+	</main>
+	<!-- End main -->
+
+	<footer class="revealed">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Besoin d'aide ?</h3>
+                    <a href="tel://004542344599" id="phone">+45 423 445 99</a>
+                    <a href="mailto:help@citytours.com" id="email_footer">help@citytours.com</a>
+                </div>
+                <div class="col-md-3">
+                    <h3>À propos</h3>
+                    <ul>
+                        <li><a href="#">À propos de nous</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Connexion</a></li>
+                        <li><a href="#">Inscription</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h3>Découvrir</h3>
+                    <ul>
+                        <li><a href="#">Blog communautaire</a></li>
+                        <li><a href="#">Guide touristique</a></li>
+                        <li><a href="#">Liste de souhaits</a></li>
+                        <li><a href="#">Galerie</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h3>Paramètres</h3>
+                    <div class="styled-select">
+                        <select name="lang" id="lang">
+                            <option value="French" selected>Français</option>
+                            <option value="English">Anglais</option>
+                            <option value="Spanish">Espagnol</option>
+                            <option value="Russian">Russe</option>
+                        </select>
+                    </div>
+                    <div class="styled-select">
+                        <select name="currency" id="currency">
+                            <option value="EUR" selected>EUR</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </div>
+                </div>
+            </div><!-- End row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="social_footer">
+                        <ul>
+                            <li><a href="#0"><i class="bi bi-instagram"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-whatsapp"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-facebook"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-twitter-x"></i></a></li>
+                            <li><a href="#0"><i class="bi bi-youtube"></i></a></li>
+                        </ul>
+                        <p>© Citytours 2024</p>
+                    </div>
+                </div>
+            </div><!-- End row -->
+        </div><!-- End container -->
+    </footer><!-- End footer -->
+
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- Search Menu -->
+	<div class="search-overlay-menu">
+		<span class="search-overlay-close"><i class="icon_set_1_icon-77"></i></span>
+		<form role="search" id="searchform" method="get">
+			<input value="" name="q" type="text" placeholder="Search..." />
+			<button type="submit"><i class="icon_set_1_icon-78"></i>
+			</button>
+		</form>
+	</div><!-- End Search Menu -->
+
+	<!-- Common scripts -->
+	<script src="/assets/js/jquery-3.7.1.min.js"></script>
+	<script src="/assets/js/common_scripts_min.js"></script>
+	<script src="/assets/js/functions.js"></script>
+
+	<!-- Map -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXp1EtixNDI7rdzmX5nn0TkHbT94QOPnc"></script>
+	<script src="/assets/js/map_hotels.js"></script>
+	<script src="/assets/js/infobox.js"></script>
+    
+    <!-- Masonry filter -->
+    <script src="/assets/js/isotope.min.js"></script>
+    <script>
+        <!-- Faysal-->
+
+    $(window).on('load',function(){
+        
+      var $container = $('.isotope-wrapper'),
+          filters = {};
+
+
+      $container.isotope({
+        itemSelector : '.isotope-item'
+      });
+
+      // filter buttons
+      $('.styled-select-filters select').change(function(){
+        var $this = $(this);
+        var group = $this.attr('data-filter-group');      
+        filters[ group ] = $this.find(':selected').attr('data-filter-value');
+        var isoFilters = [];
+        for ( var prop in filters ) {
+          isoFilters.push( filters[ prop ] )
+        }
+        var selector = isoFilters.join('');
+        $container.isotope({ filter: selector });
+        return false;
+      });
+
+    });
+    </script>
+
+<!-- SWITCHER  -->
+    <script src="/assets/js/switcher.js"></script>
+    <div id="style-switcher">
+        <h2>Color Switcher <a href="#"><i class="icon_set_1_icon-65"></i></a></h2>
+        <div>
+            <ul class="colors" id="color1">
+                <li><a href="#" class="default" title="Defaul"></a></li>
+                <li><a href="#" class="aqua" title="Aqua"></a></li>
+                <li><a href="#" class="green_switcher" title="Green"></a></li>
+                <li><a href="#" class="orange" title="Orange"></a></li>
+                <li><a href="#" class="blue" title="Blue"></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+$(function() {
+    $("#price_slider").ionRangeSlider({
+        type: "double",
+        min: 0,
+        max: 150,
+        from: 24,
+        to: 100,
+        prefix: "$",
+        grid: true,
+        skin: "round",
+        prettify_enabled: true,
+        hide_min_max: false,
+        hide_from_to: false,
+        step: 1,
+        onStart: function (data) {
+            $('#price_slider_from').text('$' + data.from);
+            $('#price_slider_to').text('$' + data.to);
+        },
+        onChange: function (data) {
+            $('#price_slider_from').text('$' + data.from);
+            $('#price_slider_to').text('$' + data.to);
+        }
+    });
+});
+</script>
+</body>
+
+
+<!-- Mirrored from www.ansonika.com/citytours/all_hotels_grid_masonry.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 28 Mar 2025 15:41:08 GMT -->
+</html>
